@@ -78,13 +78,21 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
@@ -96,25 +104,41 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 
 		<dependency>
@@ -136,12 +160,19 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
+
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<version>5.2.3.RELEASE</version>
+
+
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -180,6 +211,7 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.10.1</version>
+
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 		<dependency>
