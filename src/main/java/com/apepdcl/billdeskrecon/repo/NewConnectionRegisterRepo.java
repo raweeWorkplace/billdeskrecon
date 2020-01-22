@@ -1,5 +1,7 @@
 package com.apepdcl.billdeskrecon.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,5 +13,6 @@ import com.apepdcl.billdeskrecon.beans.NewconnectionRegister;
 public interface NewConnectionRegisterRepo extends JpaRepository<NewconnectionRegister, String> {
 
 	@Query(value = "FROM NewconnectionRegister WHERE PR_NO=:PR_NO")
-	NewconnectionRegister getRecordByPrNo(@Param("PR_NO") String PR_NO);
+	List<NewconnectionRegister> getRecordByPrNo(@Param("PR_NO") String PR_NO);
+	
 }
