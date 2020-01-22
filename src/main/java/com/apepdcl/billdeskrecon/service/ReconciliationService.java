@@ -1,9 +1,13 @@
 package com.apepdcl.billdeskrecon.service;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.apepdcl.billdeskrecon.repo.ComplaintDetailsRepo;
@@ -31,12 +36,15 @@ public class ReconciliationService {
 	@Autowired
 	ComplaintDetailsRepo compRepo;
 	
+	@Value("${file_directory}")
+	private String fileDirectory;
+	
 	
 	public HSSFSheet convertFileToSheet(String path) {
 		HSSFSheet sheet = null;
 		try {
 			FileInputStream file = new FileInputStream(
-					new File("C:\\Users\\CORP-IT-PC-59\\Desktop\\PV_APEPDCLONL_OPCIT2001162550646 (1).xls"));
+					new File(fileDirectory+"PV_APEPDCLONL_OPCIT2001162550646 (1).xls"));
 			HSSFWorkbook workbook = new HSSFWorkbook(file);
 			sheet = workbook.getSheetAt(0);
 			workbook.close();
@@ -52,27 +60,56 @@ public class ReconciliationService {
 		HSSFSheet sheet = convertFileToSheet(path);
 		List<Pair<String,String>> pairs = getListOfRecords(sheet);
 		boolean result= false;
+		List<String> recordList = new ArrayList<String>();
+		String recordData = null;
 		for(Pair<?, ?> p:pairs) {
 			
 			if(p.getValue().equals("WEB_NEWCON")) {
 				System.out.println("New Connection ::"+p.getKey());
 				result=fetchNewConnectionRecord(p.getKey().toString());
+				recordData=p.getKey() +"::"+result;
 			}else if(p.getValue().equals("WEB_NAMECHANGE")) {
 				System.out.println("Name Change ::"+p.getKey());
 				result=fetchComplaintRecord(p.getKey().toString());
+				recordData=p.getKey() +"::"+result;
 			}else if(p.getValue().equals("WEB_CATCHANGE")) {
 				System.out.println("Cat Change ::"+p.getKey());
 				result=fetchComplaintRecord(p.getKey().toString());
+				recordData=p.getKey() +"::"+result;
 			}else if(p.getValue().equals("WEB_ADDL")) {
 				System.out.println("Addl Load ::"+p.getKey());
 				result=fetchNewConnectionRecord(p.getKey().toString());
+				recordData=p.getKey() +"::"+result;
+			}else {
+				recordData = null;
 			}
-			
-			System.out.println("Result :: "+ result);
-			
+			recordList.add(recordData);
 		}
+		createFileResult(recordList);
+		
 	}
 	
+	public void createFileResult(List<String> resultList) {
+		BufferedWriter writer = null;
+        try {
+            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            File logFile = new File(fileDirectory+timeLog+".txt");
+            System.out.println(logFile.getCanonicalPath());
+            writer = new BufferedWriter(new FileWriter(logFile));
+            for(String record:resultList) {
+            	if(record!=null)
+            	writer.write(record+"\n");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception e) {
+            }
+        }
+	}
 	
 	
 
