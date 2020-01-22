@@ -30,7 +30,6 @@ import com.apepdcl.billdeskrecon.repo.NewConnectionRegisterRepo;
 
 import javafx.util.Pair;
 
-@SuppressWarnings("restriction")
 @Service
 public class ReconciliationService {
 
@@ -42,13 +41,15 @@ public class ReconciliationService {
 
 	@Value("${file_directory}")
 	private String fileDirectory;
+	
+	String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
 	public HSSFSheet convertFileToSheet(MultipartFile file) {
 		HSSFSheet sheet = null;
 		try {
 			byte[] bytes = file.getBytes();
 
-			Path path = Paths.get(fileDirectory + file.getName() + ".xls");
+			Path path = Paths.get(fileDirectory + timeLog + ".xls");
 			Files.write(path, bytes);
 			FileInputStream newfile = new FileInputStream(new File(path.toString()));
 			HSSFWorkbook workbook = new HSSFWorkbook(newfile);
@@ -97,7 +98,7 @@ public class ReconciliationService {
 	public void createFileResult(List<String> resultList) {
 		BufferedWriter writer = null;
 		try {
-			String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			
 			File logFile = new File(fileDirectory + timeLog + ".txt");
 			System.out.println(logFile.getCanonicalPath());
 			writer = new BufferedWriter(new FileWriter(logFile));

@@ -136,6 +136,5 @@ public class Test {
 //			e.printStackTrace();
 //		}
 		
-		new ReconciliationService().verifyRecord("");
 }
 }
