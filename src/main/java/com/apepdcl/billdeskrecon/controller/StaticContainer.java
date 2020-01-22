@@ -32,43 +32,21 @@ public class StaticContainer {
 
 	@GetMapping("/")
 	public ModelAndView getIndex(Model model) {
-		
+
 		return new ModelAndView("fileupload");
 	}
 
 	@PostMapping("/upload") // //new annotation since 4.3
 	public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-		String UPLOADED_FOLDER = "F:\\temp\\";
-		
-
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
 			return "redirect:/uploadStatus";
-			//return new ModelAndView("uploadStatus","message","Please select a file to upload");
 		}
 
-		try {
+		reconService.verifyRecord(file);
+		redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getName() + "'");
+		return "redirect:/uploadStatus";
 
-			// Get the file and save it somewhere
-			byte[] bytes = file.getBytes();
-			
-			Path path = Paths.get(UPLOADED_FOLDER + file.getName()+".xls");
-			Files.write(path, bytes);
-			reconService.verifyRecord(path.toString());
-			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded '" + file.getName() + "'");
-			return "redirect:/uploadStatus";
-			//return new ModelAndView("uploadStatus","message","You successfully uploaded");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message",
-					"Exception while uploading '" + file.getName() + "'");
-			return "redirect:/uploadStatus";
-			//return new ModelAndView("uploadStatus","message","Exception while uploading");
-		}
-
-		
 	}
 
 	@GetMapping("/uploadStatus")
