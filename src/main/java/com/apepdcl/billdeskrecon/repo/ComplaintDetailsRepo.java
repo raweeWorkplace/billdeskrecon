@@ -1,5 +1,7 @@
 package com.apepdcl.billdeskrecon.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +13,7 @@ import com.apepdcl.billdeskrecon.beans.ComplaintDetails;
 public interface ComplaintDetailsRepo extends JpaRepository<ComplaintDetails, String> {
 
 	@Query("FROM ComplaintDetails C WHERE C.PRNO=:PRNO ")
-	ComplaintDetails fetchComplaintIdByPrNo(@Param("PRNO") String PRNO);
+	List<ComplaintDetails> fetchComplaintIdByPrNo(@Param("PRNO") String PRNO);
 
 
 }

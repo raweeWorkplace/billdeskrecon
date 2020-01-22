@@ -1,19 +1,6 @@
 package com.apepdcl.billdeskrecon.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
-import javafx.util.Pair;
+import com.apepdcl.billdeskrecon.service.ReconciliationService;
 
 public class Test {
 	public static void main(String[] args) {
@@ -88,65 +75,67 @@ public class Test {
 //		if(newcondatecheck<=compareDate){
 //			System.out.println("checked");
 //		}
-		try {
-			FileInputStream file = new FileInputStream(
-					new File("C:\\Users\\CORP-IT-PC-59\\Desktop\\PV_APEPDCLONL_OPCIT2001162550646 (1).xls"));
-
-			// Create Workbook instance holding reference to .xlsx file
-			HSSFWorkbook workbook = new HSSFWorkbook(file);
-
-			// Get first/desired sheet from the workbook
-			HSSFSheet sheet = workbook.getSheetAt(0);
-			// Iterate through each rows one by one
-			Iterator<Row> rowIterator = sheet.iterator();
-			
-			List<Pair<String,String>> pairs = new ArrayList<Pair<String,String>>();
-			int pgiCell =-1;
-			int transTypeCell =-1;
-			while (rowIterator.hasNext()) {
-				
-				Row row = rowIterator.next();
-				// For each row, iterate through all the columns
-				Iterator<Cell> cellIterator = row.cellIterator();			
-				
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					
-					// Check the cell type and format accordingly
-					
-						if(cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
-							pgiCell=cell.getColumnIndex();					
-						}
-						
-						if(cell.getStringCellValue().trim().equals("Ref. 4")) {
-							transTypeCell=cell.getColumnIndex();
-						}						
-				}
-				if(pgiCell>0 && transTypeCell>0) {
-					pairs.add(new Pair<String,String>(row.getCell(pgiCell).getStringCellValue(), row.getCell(transTypeCell).getStringCellValue()));
-				}
-			}
-//			System.out.println(pairs);
-			workbook.close();
-			file.close();
-			for(Pair<?, ?> p:pairs) {
-				
-				if(p.getValue().equals("WEB_NEWCON")) {
-					System.out.println("New Connection ::"+p.getKey());
-				}else if(p.getValue().equals("WEB_NAMECHANGE")) {
-					System.out.println("Name Change ::"+p.getKey());
-				}else if(p.getValue().equals("WEB_CATCHANGE")) {
-					System.out.println("Cat Change ::"+p.getKey());
-				}else if(p.getValue().equals("WEB_ADDL")) {
-					System.out.println("Addl Load ::"+p.getKey());
-				}
-				
-			}
-			
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			FileInputStream file = new FileInputStream(
+//					new File("C:\\Users\\CORP-IT-PC-59\\Desktop\\PV_APEPDCLONL_OPCIT2001162550646 (1).xls"));
+//
+//			// Create Workbook instance holding reference to .xlsx file
+//			HSSFWorkbook workbook = new HSSFWorkbook(file);
+//
+//			// Get first/desired sheet from the workbook
+//			HSSFSheet sheet = workbook.getSheetAt(0);
+//			// Iterate through each rows one by one
+//			Iterator<Row> rowIterator = sheet.iterator();
+//			
+//			List<Pair<String,String>> pairs = new ArrayList<Pair<String,String>>();
+//			int pgiCell =-1;
+//			int transTypeCell =-1;
+//			while (rowIterator.hasNext()) {
+//				
+//				Row row = rowIterator.next();
+//				// For each row, iterate through all the columns
+//				Iterator<Cell> cellIterator = row.cellIterator();			
+//				
+//				while (cellIterator.hasNext()) {
+//					Cell cell = cellIterator.next();
+//					
+//					// Check the cell type and format accordingly
+//					
+//						if(cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
+//							pgiCell=cell.getColumnIndex();					
+//						}
+//						
+//						if(cell.getStringCellValue().trim().equals("Ref. 4")) {
+//							transTypeCell=cell.getColumnIndex();
+//						}						
+//				}
+//				if(pgiCell>0 && transTypeCell>0) {
+//					pairs.add(new Pair<String,String>(row.getCell(pgiCell).getStringCellValue(), row.getCell(transTypeCell).getStringCellValue()));
+//				}
+//			}
+////			System.out.println(pairs);
+//			workbook.close();
+//			file.close();
+//			for(Pair<?, ?> p:pairs) {
+//				
+//				if(p.getValue().equals("WEB_NEWCON")) {
+//					System.out.println("New Connection ::"+p.getKey());
+//				}else if(p.getValue().equals("WEB_NAMECHANGE")) {
+//					System.out.println("Name Change ::"+p.getKey());
+//				}else if(p.getValue().equals("WEB_CATCHANGE")) {
+//					System.out.println("Cat Change ::"+p.getKey());
+//				}else if(p.getValue().equals("WEB_ADDL")) {
+//					System.out.println("Addl Load ::"+p.getKey());
+//				}
+//				
+//			}
+//			
+//			
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		new ReconciliationService().verifyRecord("");
 }
 }
