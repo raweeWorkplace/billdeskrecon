@@ -36,7 +36,7 @@ public class ReconciliationService {
 		HSSFSheet sheet = null;
 		try {
 			FileInputStream file = new FileInputStream(
-					new File("C:\\Users\\CORP-IT-PC-59\\Desktop\\PV_APEPDCLONL_OPCIT2001162550646 (1).xls"));
+					new File(path));
 			HSSFWorkbook workbook = new HSSFWorkbook(file);
 			sheet = workbook.getSheetAt(0);
 			workbook.close();
