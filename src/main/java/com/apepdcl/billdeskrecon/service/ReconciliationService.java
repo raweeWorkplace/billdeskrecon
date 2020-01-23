@@ -57,31 +57,31 @@ public class ReconciliationService {
 		return sheet;
 	}
 
-	public boolean verifyRecord(MultipartFile file) {
+	public List<String> verifyRecord(MultipartFile file) {
 		boolean response = false;
+		List<String> recordList = new ArrayList<String>();
 		try {
 			HSSFSheet sheet = convertFileToSheet(file);
 			List<Pair<String, String>> pairs = getListOfRecords(sheet);
 			boolean result = false;
-			List<String> recordList = new ArrayList<String>();
 			String recordData = null;
 			for (Pair<?, ?> p : pairs) {
 				if (p.getValue().equals("WEB_NEWCON")) {
 					System.out.println("New Connection ::" + p.getKey());
 					result = fetchNewConnectionRecord(p.getKey().toString());
-					recordData = p.getKey() + "::" + result;
+					recordData = p.getKey() + "::" + (result != false ? "Success" : "Failure");
 				} else if (p.getValue().equals("WEB_NAMECHANGE")) {
 					System.out.println("Name Change ::" + p.getKey());
 					result = fetchComplaintRecord(p.getKey().toString());
-					recordData = p.getKey() + "::" + result;
+					recordData = p.getKey() + "::" + (result != false ? "Success" : "Failure");
 				} else if (p.getValue().equals("WEB_CATCHANGE")) {
 					System.out.println("Cat Change ::" + p.getKey());
 					result = fetchComplaintRecord(p.getKey().toString());
-					recordData = p.getKey() + "::" + result;
+					recordData = p.getKey() + "::" + (result != false ? "Success" : "Failure");
 				} else if (p.getValue().equals("WEB_ADDL")) {
 					System.out.println("Addl Load ::" + p.getKey());
 					result = fetchNewConnectionRecord(p.getKey().toString());
-					recordData = p.getKey() + "::" + result;
+					recordData = p.getKey() + "::" + (result != false ? "Success" : "Failure");
 				} else {
 					recordData = null;
 				}
@@ -89,10 +89,15 @@ public class ReconciliationService {
 			}
 			createFileResult(recordList);
 			response = true;
+			
+			if(response) {
+				return recordList;
+			}
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return response;
+		return null;
 	}
 
 	public void createFileResult(List<String> resultList) throws Exception {

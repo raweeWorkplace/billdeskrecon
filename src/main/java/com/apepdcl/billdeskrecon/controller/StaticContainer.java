@@ -1,9 +1,6 @@
 package com.apepdcl.billdeskrecon.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,8 +38,10 @@ public class StaticContainer {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
 			return "redirect:/";
 		}
-		if (reconService.verifyRecord(file)) {
-			redirectAttributes.addFlashAttribute("message", "You successfully processed '" + file.getName() + "'");
+		List<String> responseList = reconService.verifyRecord(file);
+		if (!responseList.isEmpty()) {
+			redirectAttributes.addFlashAttribute("message", "File successfully processed ");
+			redirectAttributes.addFlashAttribute("list",responseList );
 		} else {
 			redirectAttributes.addFlashAttribute("message", "Something went wrong while processing.\n Contact Admin");
 		}
