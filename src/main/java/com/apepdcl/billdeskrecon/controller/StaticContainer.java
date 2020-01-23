@@ -32,7 +32,7 @@ public class StaticContainer {
 
 	@GetMapping("/")
 	public ModelAndView getIndex(Model model) {
-		return new ModelAndView("fileupload");
+		return new ModelAndView("index");
 	}
 
 	@PostMapping("/upload") // //new annotation since 4.3
@@ -41,18 +41,12 @@ public class StaticContainer {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
 			return "redirect:/";
 		}
-		if(reconService.verifyRecord(file)) {
-		redirectAttributes.addFlashAttribute("message", "You successfully processed '" + file.getName() + "'");
-		}else {
-			redirectAttributes.addFlashAttribute("message", "Something went wrong while processing.\n Contact Admin");	
+		if (reconService.verifyRecord(file)) {
+			redirectAttributes.addFlashAttribute("message", "You successfully processed '" + file.getName() + "'");
+		} else {
+			redirectAttributes.addFlashAttribute("message", "Something went wrong while processing.\n Contact Admin");
 		}
 		return "redirect:/";
 
 	}
-
-	@GetMapping("/uploadStatus")
-	public String uploadStatus() {
-		return "uploadStatus";
-	}
-
 }
