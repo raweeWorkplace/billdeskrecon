@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,108 +43,98 @@ public class ReconciliationService {
 
 	String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
-	public HSSFSheet convertFileToSheet(MultipartFile file) {
+	public HSSFSheet convertFileToSheet(MultipartFile file) throws Exception {
 		HSSFSheet sheet = null;
-		try {
-			byte[] bytes = file.getBytes();
+		byte[] bytes = file.getBytes();
 
-			Path path = Paths.get(fileDirectory + timeLog + ".xls");
-			Files.write(path, bytes);
-			FileInputStream newfile = new FileInputStream(new File(path.toString()));
-			HSSFWorkbook workbook = new HSSFWorkbook(newfile);
-			sheet = workbook.getSheetAt(0);
-			workbook.close();
-			newfile.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Path path = Paths.get(fileDirectory + timeLog + ".xls");
+		Files.write(path, bytes);
+		FileInputStream newfile = new FileInputStream(new File(path.toString()));
+		HSSFWorkbook workbook = new HSSFWorkbook(newfile);
+		sheet = workbook.getSheetAt(0);
+		workbook.close();
+		newfile.close();
 		return sheet;
 	}
 
-	public void verifyRecord(MultipartFile file) {
-		HSSFSheet sheet = convertFileToSheet(file);
-		List<Pair<String, String>> pairs = getListOfRecords(sheet);
-		boolean result = false;
-		List<String> recordList = new ArrayList<String>();
-		String recordData = null;
-		for (Pair<?, ?> p : pairs) {
-
-			if (p.getValue().equals("WEB_NEWCON")) {
-				System.out.println("New Connection ::" + p.getKey());
-				result = fetchNewConnectionRecord(p.getKey().toString());
-				recordData = p.getKey() + "::" + result;
-			} else if (p.getValue().equals("WEB_NAMECHANGE")) {
-				System.out.println("Name Change ::" + p.getKey());
-				result = fetchComplaintRecord(p.getKey().toString());
-				recordData = p.getKey() + "::" + result;
-			} else if (p.getValue().equals("WEB_CATCHANGE")) {
-				System.out.println("Cat Change ::" + p.getKey());
-				result = fetchComplaintRecord(p.getKey().toString());
-				recordData = p.getKey() + "::" + result;
-			} else if (p.getValue().equals("WEB_ADDL")) {
-				System.out.println("Addl Load ::" + p.getKey());
-				result = fetchNewConnectionRecord(p.getKey().toString());
-				recordData = p.getKey() + "::" + result;
-			} else {
-				recordData = null;
+	public boolean verifyRecord(MultipartFile file) {
+		boolean response = false;
+		try {
+			HSSFSheet sheet = convertFileToSheet(file);
+			List<Pair<String, String>> pairs = getListOfRecords(sheet);
+			boolean result = false;
+			List<String> recordList = new ArrayList<String>();
+			String recordData = null;
+			for (Pair<?, ?> p : pairs) {
+				if (p.getValue().equals("WEB_NEWCON")) {
+					System.out.println("New Connection ::" + p.getKey());
+					result = fetchNewConnectionRecord(p.getKey().toString());
+					recordData = p.getKey() + "::" + result;
+				} else if (p.getValue().equals("WEB_NAMECHANGE")) {
+					System.out.println("Name Change ::" + p.getKey());
+					result = fetchComplaintRecord(p.getKey().toString());
+					recordData = p.getKey() + "::" + result;
+				} else if (p.getValue().equals("WEB_CATCHANGE")) {
+					System.out.println("Cat Change ::" + p.getKey());
+					result = fetchComplaintRecord(p.getKey().toString());
+					recordData = p.getKey() + "::" + result;
+				} else if (p.getValue().equals("WEB_ADDL")) {
+					System.out.println("Addl Load ::" + p.getKey());
+					result = fetchNewConnectionRecord(p.getKey().toString());
+					recordData = p.getKey() + "::" + result;
+				} else {
+					recordData = null;
+				}
+				recordList.add(recordData);
 			}
-			recordList.add(recordData);
+			createFileResult(recordList);
+			response = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		createFileResult(recordList);
-
+		return response;
 	}
 
-	public void createFileResult(List<String> resultList) {
+	public void createFileResult(List<String> resultList) throws Exception {
 		BufferedWriter writer = null;
-		try {
-
-			File logFile = new File(fileDirectory + timeLog + ".txt");
-			System.out.println(logFile.getCanonicalPath());
-			writer = new BufferedWriter(new FileWriter(logFile));
-			for (String record : resultList) {
-				if (record != null)
-					writer.write(record + "\n");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception e) {
-			}
+		File logFile = new File(fileDirectory + timeLog + ".txt");
+		System.out.println(logFile.getCanonicalPath());
+		writer = new BufferedWriter(new FileWriter(logFile));
+		for (String record : resultList) {
+			if (record != null)
+				writer.write(record + "\n");
 		}
+		writer.close();
 	}
 
 	public List<Pair<String, String>> getListOfRecords(HSSFSheet sheet) {
 		List<Pair<String, String>> pairs = new ArrayList<Pair<String, String>>();
 		try {
-		int pgiCell = -1;
-		int transTypeCell = -1;
-		Iterator<Row> rowIterator = sheet.iterator();
-		while (rowIterator.hasNext()) {
-			Row row = rowIterator.next();
-			Iterator<Cell> cellIterator = row.cellIterator();
-			if(pgiCell==-1 || transTypeCell ==-1) {
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					if (cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
-						pgiCell = cell.getColumnIndex();
-					}
-					if (cell.getStringCellValue().trim().equals("Ref. 4")) {
-						transTypeCell = cell.getColumnIndex();
+			int pgiCell = -1;
+			int transTypeCell = -1;
+			Iterator<Row> rowIterator = sheet.iterator();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				if (pgiCell == -1 || transTypeCell == -1) {
+					while (cellIterator.hasNext()) {
+						Cell cell = cellIterator.next();
+						if (cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
+							pgiCell = cell.getColumnIndex();
+						}
+						if (cell.getStringCellValue().trim().equals("Ref. 4")) {
+							transTypeCell = cell.getColumnIndex();
+						}
 					}
 				}
+
+				if (pgiCell > 0 && transTypeCell > 0) {
+					pairs.add(new Pair<String, String>(row.getCell(pgiCell).getStringCellValue(),
+							row.getCell(transTypeCell).getStringCellValue()));
+				}
+				System.out.println(pairs.toString());
 			}
-			
-			if (pgiCell > 0 && transTypeCell > 0) {
-				pairs.add(new Pair<String, String>(row.getCell(pgiCell).getStringCellValue(),
-						row.getCell(transTypeCell).getStringCellValue()));
-			}
-			System.out.println(pairs.toString());
-		}
-		}catch(Exception ex) {
-			
+		} catch (Exception e) {
 		}
 		return pairs;
 	}

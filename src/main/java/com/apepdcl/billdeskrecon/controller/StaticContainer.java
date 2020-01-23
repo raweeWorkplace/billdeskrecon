@@ -32,7 +32,6 @@ public class StaticContainer {
 
 	@GetMapping("/")
 	public ModelAndView getIndex(Model model) {
-
 		return new ModelAndView("fileupload");
 	}
 
@@ -40,12 +39,14 @@ public class StaticContainer {
 	public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-			return "redirect:/uploadStatus";
+			return "redirect:/";
 		}
-
-		reconService.verifyRecord(file);
-		redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getName() + "'");
-		return "redirect:/uploadStatus";
+		if(reconService.verifyRecord(file)) {
+		redirectAttributes.addFlashAttribute("message", "You successfully processed '" + file.getName() + "'");
+		}else {
+			redirectAttributes.addFlashAttribute("message", "Something went wrong while processing.\n Contact Admin");	
+		}
+		return "redirect:/";
 
 	}
 
