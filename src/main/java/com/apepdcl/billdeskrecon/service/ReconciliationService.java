@@ -41,7 +41,7 @@ public class ReconciliationService {
 
 	@Value("${file_directory}")
 	private String fileDirectory;
-	
+
 	String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 
 	public HSSFSheet convertFileToSheet(MultipartFile file) {
@@ -98,7 +98,7 @@ public class ReconciliationService {
 	public void createFileResult(List<String> resultList) {
 		BufferedWriter writer = null;
 		try {
-			
+
 			File logFile = new File(fileDirectory + timeLog + ".txt");
 			System.out.println(logFile.getCanonicalPath());
 			writer = new BufferedWriter(new FileWriter(logFile));
@@ -119,25 +119,33 @@ public class ReconciliationService {
 
 	public List<Pair<String, String>> getListOfRecords(HSSFSheet sheet) {
 		List<Pair<String, String>> pairs = new ArrayList<Pair<String, String>>();
+		try {
 		int pgiCell = -1;
 		int transTypeCell = -1;
 		Iterator<Row> rowIterator = sheet.iterator();
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
 			Iterator<Cell> cellIterator = row.cellIterator();
-			while (cellIterator.hasNext()) {
-				Cell cell = cellIterator.next();
-				if (cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
-					pgiCell = cell.getColumnIndex();
-				}
-				if (cell.getStringCellValue().trim().equals("Ref. 4")) {
-					transTypeCell = cell.getColumnIndex();
+			if(pgiCell==-1 || transTypeCell ==-1) {
+				while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					if (cell.getStringCellValue().trim().equals("PGI Ref. No.")) {
+						pgiCell = cell.getColumnIndex();
+					}
+					if (cell.getStringCellValue().trim().equals("Ref. 4")) {
+						transTypeCell = cell.getColumnIndex();
+					}
 				}
 			}
+			
 			if (pgiCell > 0 && transTypeCell > 0) {
 				pairs.add(new Pair<String, String>(row.getCell(pgiCell).getStringCellValue(),
 						row.getCell(transTypeCell).getStringCellValue()));
 			}
+			System.out.println(pairs.toString());
+		}
+		}catch(Exception ex) {
+			
 		}
 		return pairs;
 	}
