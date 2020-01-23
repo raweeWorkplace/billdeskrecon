@@ -27,8 +27,8 @@
 	<div id="drop-area">
 		<form method="POST" action="/billdesk-reconcilation/upload"
 			enctype="multipart/form-data">
-			<div class="file-upload-wrapper">
-				<input type="file" name="file" /><br />
+			<div class="file-upload-wrapper" data-height="500" >
+				<input type="file" name="file" id="input-file-max-fs" class="file-upload" data-max-file-size="2M"/><br />
 			</div>
 			<input type="submit" value="Submit" />
 		</form>
