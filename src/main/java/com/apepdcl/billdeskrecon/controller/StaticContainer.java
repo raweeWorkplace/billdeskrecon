@@ -32,7 +32,7 @@ public class StaticContainer {
 		return new ModelAndView("index");
 	}
 
-	@PostMapping("/upload") // //new annotation since 4.3
+	@PostMapping("/upload") 
 	public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("message", "Please select a file to upload");

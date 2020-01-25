@@ -147,11 +147,13 @@ public class ReconciliationService {
 	@Transactional
 	public boolean fetchNewConnectionRecord(String prno) {
 		System.out.println(prno);
-		return !newConRepo.getRecordByPrNo(prno).isEmpty() ? true : false;
+//		return !newConRepo.getRecordByPrNo(prno).isEmpty() ? true : false;
+		return newConRepo.getRecordByPrNo(prno);
 	}
 
 	@Transactional
 	public boolean fetchComplaintRecord(String prno) {
-		return !compRepo.fetchComplaintIdByPrNo(prno).isEmpty() ? true : false;
+//		return !compRepo.fetchComplaintIdByPrNo(prno).isEmpty() ? true : false;
+		return compRepo.fetchComplaintIdByPrNo(prno);
 	}
 }

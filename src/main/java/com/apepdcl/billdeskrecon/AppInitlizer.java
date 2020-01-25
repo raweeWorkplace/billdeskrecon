@@ -32,7 +32,7 @@ public class AppInitlizer extends AbstractAnnotationConfigDispatcherServletIniti
 		return new String[] { "/", "/billdeskrecon" };
 	}
 
-	 private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
+	 private int maxUploadSizeInMb = 5 * 1024 * 1024;
 
 	 @Override
 	    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
