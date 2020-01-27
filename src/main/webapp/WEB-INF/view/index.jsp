@@ -80,16 +80,16 @@
 								<c:if test="${not empty item}">
 									<c:set var="dateParts" value="${fn:split(item, '::')}" />
 									<c:if test="${dateParts[1] eq 'Failure'}">
-										<tr bgcolor="#fc767b">
-											<td>${dateParts[0]}</td>
-											<td>${dateParts[1]}</td>
-										</tr>
+									<tr  bgcolor="#fc767b">
+										<td>${dateParts[0]}</td>
+										<td>${dateParts[1]}</td>
+									</tr>
 									</c:if>
 									<c:if test="${dateParts[1] eq 'Success'}">
-										<tr bgcolor="#80BE0F">
-											<td>${dateParts[0]}</td>
-											<td>${dateParts[1]}</td>
-										</tr>
+									<tr  bgcolor="#80BE0F">
+										<td>${dateParts[0]}</td>
+										<td>${dateParts[1]}</td>
+									</tr>
 									</c:if>
 								</c:if>
 							</c:forEach>
